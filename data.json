@@ -1,0 +1,30 @@
+{
+  "woodTypes": [
+    "Appelboom",
+    "Beuk",
+    "Ceder",
+    "Cipres",
+    "Dennenhout",
+    "Esdoorn",
+    "Hulst",
+    "Kastanjehout",
+    "Laurier",
+    "Lijsterbes",
+    "Meidoorn",
+    "Palissander",
+    "Populier",
+    "Taxus",
+    "Walnoothout",
+    "Wijnhout"
+  ],
+  "cores": [
+    "Drakenhartbloed",
+    "Eenhoornhaar",
+    "Feniksveer",
+    "Glamorganahaar",
+    "Terzielerhaar",
+    "Hippogriefveer",
+    "Feeënvleugel",
+    "Demiguisehaar"
+  ]
+}

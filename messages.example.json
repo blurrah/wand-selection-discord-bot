@@ -1,3 +1,8 @@
 {
-  "ringCommandDescription": "Ring wand selection bot to help"
+  "ringCommandDescription": "Ring wand selection bot to help",
+  "startSelection": "Can I help you with a new wand?",
+  "buttonConfirm": "Give me a wand",
+  "buttonDeny": "Some other time",
+  "wrongUserInteraction": "I am helping someone else right now. Please ring for me yourself.",
+  "getsAWand": "{user} gets a wand!"
 }
