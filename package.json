@@ -1,0 +1,31 @@
+{
+  "name": "wand-selection-discord-bot",
+  "version": "1.0.0",
+  "description": "Wand selection bot for Discord",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node dist/index.js",
+    "build": "tsup",
+    "dev": "tsup --watch --onSuccess \"node dist/index.js\""
+  },
+  "keywords": [
+    "discord",
+    "wand",
+    "selection",
+    "bot"
+  ],
+  "author": "Boris Besemer",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "discord.js": "^14.11.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.3.1",
+    "tsup": "^7.0.0",
+    "typescript": "^5.1.3"
+  }
+}
