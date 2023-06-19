@@ -1,0 +1,1 @@
+ALTER TABLE "wands" ADD COLUMN "length" integer NOT NULL;

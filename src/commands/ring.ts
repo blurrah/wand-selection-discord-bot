@@ -1,3 +1,5 @@
+import { db } from "db";
+import { users, wands } from "db/schema";
 import {
   ActionRowBuilder,
   BaseInteraction,
@@ -11,8 +13,12 @@ import {
   ComponentType,
   SlashCommandBuilder,
 } from "discord.js";
+import { eq } from "drizzle-orm";
 import { wandSelector } from "lib/wand-selector";
 import messages from "../../messages.json";
+
+// Array containing win chances after each attempt
+const chances = [0.2, 0.4, 0.6, 0.8, 1] as const;
 
 const createFilter =
   (
@@ -33,7 +39,8 @@ const createFilter =
  */
 const handleWandSelectionInteraction = async (
   baseInteraction: ChatInputCommandInteraction,
-  interaction: ButtonInteraction<CacheType>
+  interaction: ButtonInteraction<CacheType>,
+  attempt: number = 0
 ) => {
   if (interaction.user.id !== baseInteraction.user.id) {
     await interaction.reply({
@@ -50,7 +57,7 @@ const handleWandSelectionInteraction = async (
 
   const swing = new ButtonBuilder()
     .setCustomId("swing-wand")
-    .setLabel("Swing the wand")
+    .setLabel(messages.swingWand)
     .setStyle(ButtonStyle.Primary);
 
   const row = new ActionRowBuilder<ButtonBuilder>().addComponents(swing);
@@ -71,15 +78,35 @@ const handleWandSelectionInteraction = async (
       time: 60000,
     });
 
-    if (Math.random() < 0.5) {
+    if (Math.random() <= chances[attempt]) {
+      await db.insert(users).values({
+        id: baseInteraction.user.id,
+        guildId: baseInteraction.guildId!,
+      });
+
+      await db.insert(wands).values({
+        userId: baseInteraction.user.id,
+        wood,
+        core,
+        length,
+      });
+
       await collectInteraction.editReply({
-        content: "You got a wand!!!!!!!!!!!",
+        content: messages.gotTheWand
+          .replace("{user}", baseInteraction.user.toString())
+          .replace("{wood}", wood)
+          .replace("{core}", core)
+          .replace("{length}", (length / 10).toString()),
         components: [],
       });
 
       return;
     }
-    await handleWandSelectionInteraction(baseInteraction, collectInteraction);
+    await handleWandSelectionInteraction(
+      baseInteraction,
+      collectInteraction,
+      ++attempt
+    );
   } catch (error) {
     console.warn(`Something went wrong: ${error}`);
   }
@@ -104,6 +131,24 @@ export default {
       confirm,
       deny
     );
+
+    const user = await db.query.users.findFirst({
+      with: {
+        wand: true,
+      },
+      where: eq(users.id, interaction.user.id),
+    });
+
+    if (user) {
+      await interaction.reply({
+        content: messages.alreadyHasWand
+          .replace("{wood}", user.wand.wood)
+          .replace("{core}", user.wand.core)
+          .replace("{length}", (user.wand.length / 10).toString()),
+      });
+
+      return;
+    }
 
     const filter = createFilter(interaction);
 
