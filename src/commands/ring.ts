@@ -92,12 +92,17 @@ const handleWandSelectionInteraction = async (
       });
 
       await collectInteraction.editReply({
-        content: messages.gotTheWand
-          .replace("{user}", baseInteraction.user.toString())
-          .replace("{wood}", wood)
-          .replace("{core}", core)
-          .replace("{length}", (length / 10).toString()),
         components: [],
+        embeds: [
+          {
+            title: messages.gotTheWandTitle,
+            description: messages.gotTheWand
+              .replace("{user}", baseInteraction.user.toString())
+              .replace("{wood}", wood)
+              .replace("{core}", core)
+              .replace("{length}", (length / 10).toString()),
+          },
+        ],
       });
 
       return;
@@ -141,10 +146,16 @@ export default {
 
     if (user) {
       await interaction.reply({
-        content: messages.alreadyHasWand
-          .replace("{wood}", user.wand.wood)
-          .replace("{core}", user.wand.core)
-          .replace("{length}", (user.wand.length / 10).toString()),
+        content: "",
+        embeds: [
+          {
+            title: "Your wand",
+            description: messages.alreadyHasWand
+              .replace("{wood}", user.wand.wood)
+              .replace("{core}", user.wand.core)
+              .replace("{length}", (user.wand.length / 10).toString()),
+          },
+        ],
       });
 
       return;
