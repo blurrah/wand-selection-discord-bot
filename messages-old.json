@@ -1,0 +1,16 @@
+{
+  "ringCommandDescription": "Calls Olivander to help you with your wand.",
+  "startSelection": "Can I help you with a new wand?",
+  "buttonConfirm": "Give me a wand",
+  "buttonDeny": "Some other time",
+  "wrongUserInteraction": "I am helping someone else right now. Please ring for me yourself.",
+  "testTheWand": "Here's a {wood} wand with a {core} core and a length of {length}! Please give it a swing.",
+  "alreadyHasWand": "I remember this wand quite vividly! It suits you quite nicely.",
+  "gotTheWandTitle": "A wand has found it's owner!",
+  "gotTheWand": "Seems this wand is a perfect match!",
+  "swingWand": "Swing the wand",
+  "wood": "Wood type",
+  "core": "Core",
+  "length": "Length",
+  "yourWand": "Your wand"
+}

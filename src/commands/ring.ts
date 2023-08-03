@@ -19,6 +19,17 @@ import messages from "../../messages.json";
 
 // Array containing win chances after each attempt
 const chances = [0.2, 0.4, 0.6, 0.8, 1] as const;
+const attemptLines = [
+  messages.testTheWand1,
+  messages.testTheWand2,
+  messages.testTheWand3,
+  messages.testTheWand4,
+  messages.testTheWand5,
+] as const;
+
+const thumbnail = {
+  url: process.env.NPC_THUMBNAIL_URL,
+};
 
 const createFilter =
   (
@@ -63,7 +74,7 @@ const handleWandSelectionInteraction = async (
   const row = new ActionRowBuilder<ButtonBuilder>().addComponents(swing);
 
   const message = await interaction.editReply({
-    content: messages.testTheWand
+    content: attemptLines[attempt]
       .replace("{user}", baseInteraction.user.toString())
       .replace("{wood}", wood)
       .replace("{core}", core)
@@ -93,14 +104,28 @@ const handleWandSelectionInteraction = async (
 
       await collectInteraction.editReply({
         components: [],
+        content: "",
         embeds: [
           {
             title: messages.gotTheWandTitle,
-            description: messages.gotTheWand
-              .replace("{user}", baseInteraction.user.toString())
-              .replace("{wood}", wood)
-              .replace("{core}", core)
-              .replace("{length}", (length / 10).toString()),
+            description: messages.gotTheWand,
+            fields: [
+              {
+                name: messages.wood,
+                value: wood,
+                inline: true,
+              },
+              {
+                name: messages.core,
+                value: core,
+                inline: true,
+              },
+              {
+                name: messages.length,
+                value: `${length / 10} cm`,
+              },
+            ],
+            thumbnail,
           },
         ],
       });
@@ -137,6 +162,8 @@ export default {
       deny
     );
 
+    await interaction.deferReply();
+
     const user = await db.query.users.findFirst({
       with: {
         wand: true,
@@ -145,15 +172,33 @@ export default {
     });
 
     if (user) {
-      await interaction.reply({
+      await interaction.followUp({
         content: "",
         embeds: [
           {
-            title: "Your wand",
+            title: messages.yourWand,
             description: messages.alreadyHasWand
+              .replace("{user}", interaction.user.toString())
               .replace("{wood}", user.wand.wood)
               .replace("{core}", user.wand.core)
               .replace("{length}", (user.wand.length / 10).toString()),
+            fields: [
+              {
+                name: messages.wood,
+                value: user.wand.wood,
+                inline: true,
+              },
+              {
+                name: messages.core,
+                value: user.wand.core,
+                inline: true,
+              },
+              {
+                name: messages.length,
+                value: `${user.wand.length / 10} cm`,
+              },
+            ],
+            thumbnail,
           },
         ],
       });
@@ -163,8 +208,14 @@ export default {
 
     const filter = createFilter(interaction);
 
-    const message = await interaction.reply({
-      content: messages.startSelection,
+    const message = await interaction.followUp({
+      content: "",
+      embeds: [
+        {
+          description: messages.startSelection,
+          thumbnail,
+        },
+      ],
       components: [row],
     });
 
